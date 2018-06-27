@@ -35,6 +35,7 @@ public class RepeatedQueryUtil {
         String content = null;
         for (Map<String, Object> map : list) {
             try {
+                // 默认KEY , BIEC_CLOBCOTENT
                 content = getObjToStr(map.get("BIEC_CLOBCOTENT"));
                 Map<String, Integer> participles = delHTMLandParticipleIK(content);
                 map.put("BIEC_CLOBCOTENT",participles);
@@ -102,7 +103,7 @@ public class RepeatedQueryUtil {
      * @return
      */
     public static Map<String, Integer> getHighWordFrequency(Map<String,Integer> words){
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<String, Integer>();
         for (Map.Entry<String, Integer> entry : words.entrySet()) {
             Integer value = entry.getValue();
             if (value > 10) {
@@ -428,7 +429,7 @@ public class RepeatedQueryUtil {
             result = String.valueOf(obj);
         } else if (obj instanceof String[]) {
             String[] str = (String[]) obj;
-            if (str != null && str.length > 0) {
+            if (str.length > 0) {
                 result = str[0];
             }
         } else if (obj instanceof Clob) {
@@ -448,9 +449,10 @@ public class RepeatedQueryUtil {
     private static String getClobToString(Clob clob) {
         String reString = "";
         Reader is = null;
+        BufferedReader br = null;
         try {
             is = clob.getCharacterStream();
-            BufferedReader br = new BufferedReader(is);
+            br = new BufferedReader(is);
             String s = br.readLine();
             StringBuffer sb = new StringBuffer();
             int i = 0;
@@ -468,6 +470,7 @@ public class RepeatedQueryUtil {
         } finally {
             if (is != null) {
                 try {
+                    br.close();
                     is.close();
                 } catch (Exception e) {
                 }
